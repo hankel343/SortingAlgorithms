@@ -1,46 +1,80 @@
 #include <iostream>
 #include <time.h>
+#include <chrono>
+#include <iomanip>
 #include "SortingAlgorithms.h"
 
 using namespace std;
 
 int main()
 {
+	srand(time(NULL));
+	chrono::time_point<chrono::system_clock> start;
+	chrono::time_point<chrono::system_clock> end;
+	chrono::duration<float> elapsed;
+
 	SortingAlgorithms Algo;
 
-	srand(time(NULL));
+
 	int nTemp = 0;
-	const int nLIST_LENGTH = 10;
-	int* nList = new int[nLIST_LENGTH];
+	int nComparisons = 0;
+	const int nLIST_LENGTH = 1000;
+	int* pSelectionSort = new int[nLIST_LENGTH];
+	int* pBubbleSort = new int[nLIST_LENGTH];
+	int* pAdaptiveBubbleSort = new int[nLIST_LENGTH];
+	int* pInsertionSort = new int[nLIST_LENGTH];
 
 	for (int i = 0; i < nLIST_LENGTH; i++)
 	{
 		nTemp = rand() % RAND_MAX;
 
-		nList[i] = nTemp;
+		pSelectionSort[i] = nTemp;
+		pBubbleSort[i] = nTemp;
+		pAdaptiveBubbleSort[i] = nTemp;
+		pInsertionSort[i] = nTemp;
 	}
 
-	cout << "Before sorting: \n";
-	for (int i = 0; i < nLIST_LENGTH; i++)
-	{
-		if (i != 0 && i % 10 == 0)
-			cout << endl << nList[i] << " ";
-		else
-			cout << nList[i] << " ";
-	}
 
-	Algo.AdaptiveBubbleSort(nList, nLIST_LENGTH);
+	start = chrono::system_clock::now();
+	Algo.SelectionSort(pSelectionSort, nLIST_LENGTH, nComparisons);
+	end = chrono::system_clock::now();
+	elapsed = end - start;
+	cout << "Selection Sort:\n";
+	cout << "Sorting time: " << fixed << elapsed.count() << " seconds" << endl;
+	cout << "Total comparisons: " << nComparisons << endl;
 
-	cout << "\n\nAfter sorting: \n";
-	for (int i = 0; i < nLIST_LENGTH; i++)
-	{
-		if (i != 0 && i % 10 == 0)
-			cout << endl << nList[i] << " ";
-		else
-			cout << nList[i] << " ";
-	}
+	nComparisons = 0;
+	start = chrono::system_clock::now();
+	Algo.BubbleSort(pBubbleSort, nLIST_LENGTH, nComparisons);
+	end = chrono::system_clock::now();
+	elapsed = end - start;
+	cout << "\nBubble Sort:\n";
+	cout << "Sorting time: " << fixed << elapsed.count() << " seconds" << endl;
+	cout << "Total comparisons: " << nComparisons << endl;
 
-	delete[] nList;
+	nComparisons = 0;
+	start = chrono::system_clock::now();
+	Algo.AdaptiveBubbleSort(pAdaptiveBubbleSort, nLIST_LENGTH, nComparisons);
+	end = chrono::system_clock::now();
+	elapsed = end - start;
+	cout << "\nAdaptive Bubble Sort: \n";
+	cout << "Sorting time: " << fixed << elapsed.count() << " seconds" << endl;
+	cout << "Total comparisons: " << nComparisons << endl;
+
+	nComparisons = 0;
+	start = chrono::system_clock::now();
+	Algo.InsertionSort(pInsertionSort, nLIST_LENGTH, nComparisons);
+	end = chrono::system_clock::now();
+	elapsed = end - start;
+	cout << "\nInsertion Sort:\n";
+	cout << "Sorting time: " << fixed << elapsed.count() << " seconds" << endl;
+	cout << "Total comparisons: " << nComparisons << endl;
+	
+
+	delete[] pSelectionSort;
+	delete[] pBubbleSort;
+	delete[] pAdaptiveBubbleSort;
+	delete[] pInsertionSort;
 
 	return 0;
 }
