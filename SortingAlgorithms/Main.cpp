@@ -29,7 +29,7 @@ int main()
 			cout << nList[i] << " ";
 	}
 
-	Algo.SelectionSort(nList, nLIST_LENGTH);
+	Algo.AdaptiveBubbleSort(nList, nLIST_LENGTH);
 
 	cout << "\n\nAfter sorting: \n";
 	for (int i = 0; i < nLIST_LENGTH; i++)
