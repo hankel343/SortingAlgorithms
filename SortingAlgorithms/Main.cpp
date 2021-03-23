@@ -18,11 +18,12 @@ int main()
 
 	int nTemp = 0;
 	int nComparisons = 0;
-	const int nLIST_LENGTH = 1000;
+	const int nLIST_LENGTH = 4;
 	int* pSelectionSort = new int[nLIST_LENGTH];
 	int* pBubbleSort = new int[nLIST_LENGTH];
 	int* pAdaptiveBubbleSort = new int[nLIST_LENGTH];
 	int* pInsertionSort = new int[nLIST_LENGTH];
+	int* pMergeSort = new int[nLIST_LENGTH];
 
 	for (int i = 0; i < nLIST_LENGTH; i++)
 	{
@@ -32,6 +33,7 @@ int main()
 		pBubbleSort[i] = nTemp;
 		pAdaptiveBubbleSort[i] = nTemp;
 		pInsertionSort[i] = nTemp;
+		pMergeSort[i] = nTemp;
 	}
 
 
@@ -70,11 +72,23 @@ int main()
 	cout << "Sorting time: " << fixed << elapsed.count() << " seconds" << endl;
 	cout << "Total comparisons: " << nComparisons << endl;
 	
+	int* pTempArray = new int[nLIST_LENGTH];
+	nComparisons = 0;
+	start = chrono::system_clock::now();
+	Algo.MergeSort(pMergeSort, 0, nLIST_LENGTH-1, pTempArray, nComparisons);
+	end = chrono::system_clock::now();
+	elapsed = end - start;
+	cout << "\nMerge Sort:\n";
+	cout << "Sorting time: " << fixed << elapsed.count() << " seconds" << endl;
+	cout << "Total comparisons: " << nComparisons << endl;
+
 
 	delete[] pSelectionSort;
 	delete[] pBubbleSort;
 	delete[] pAdaptiveBubbleSort;
 	delete[] pInsertionSort;
+	delete[] pMergeSort;
+	delete[] pTempArray;
 
 	return 0;
 }

@@ -8,14 +8,15 @@ void SortingAlgorithms::Swap(int& num1, int& num2)
 	num2 = nTemp;
 }
 
-int SortingAlgorithms::MinIndex(int* nList, int nStartIndex, int nEndIndex, int& nComparisons)
+//Auxiliary to SelectionSort
+int SortingAlgorithms::MinIndex(int* pList, int nStartIndex, int nEndIndex, int& nComparisons)
 {
 	int nIndexOfMin = nStartIndex;
 
 	for (int i = nStartIndex + 1; i <= nEndIndex; i++)
 	{
 		nComparisons++;
-		if (nList[i] < nList[nIndexOfMin])
+		if (pList[i] < pList[nIndexOfMin])
 			nIndexOfMin = i;
 	}
 
@@ -23,27 +24,27 @@ int SortingAlgorithms::MinIndex(int* nList, int nStartIndex, int nEndIndex, int&
 }
 
 //Auxiliary to BubbleSort
-void SortingAlgorithms::BubbleUp(int* nList, int nStartIndex, int nEndIndex, int& nComparisons)
+void SortingAlgorithms::BubbleUp(int* pList, int nStartIndex, int nEndIndex, int& nComparisons)
 {
 	for (int i = nEndIndex; i > nStartIndex; i--)
 	{
 		nComparisons++;
-		if (nList[i] < nList[i - 1])
-			Swap(nList[i], nList[i - 1]);
+		if (pList[i] < pList[i - 1])
+			Swap(pList[i], pList[i - 1]);
 	}
 		
 }
 
 //Auxiliary to AdaptiveBubbleSort
-void SortingAlgorithms::AdaptiveBubbleUp(int* nList, int nStartIndex, int nEndIndex, bool& bSorted, int& nComparisons)
+void SortingAlgorithms::AdaptiveBubbleUp(int* pList, int nStartIndex, int nEndIndex, bool& bSorted, int& nComparisons)
 {
 	bSorted = true;
 	for (int i = nEndIndex; i > nStartIndex; i--)
 	{
 		nComparisons++;
-		if (nList[i] < nList[i - 1])
+		if (pList[i] < pList[i - 1])
 		{
-			Swap(nList[i], nList[i - 1]);
+			Swap(pList[i], pList[i - 1]);
 			bSorted = false;
 		}
 			
@@ -51,7 +52,7 @@ void SortingAlgorithms::AdaptiveBubbleUp(int* nList, int nStartIndex, int nEndIn
 }
 
 //Auxiliary to InsertionSort
-void SortingAlgorithms::InsertItem(int* nList, int nStartIndex, int nEndIndex, int& nComparisons)
+void SortingAlgorithms::InsertItem(int* pList, int nStartIndex, int nEndIndex, int& nComparisons)
 {
 	bool bFinished = false;
 	int nCurrent = nEndIndex;
@@ -60,9 +61,9 @@ void SortingAlgorithms::InsertItem(int* nList, int nStartIndex, int nEndIndex, i
 	while (bMoreToSearch && bFinished == false)
 	{
 		nComparisons++;
-		if (nList[nCurrent] < nList[nCurrent - 1])
+		if (pList[nCurrent] < pList[nCurrent - 1])
 		{
-			Swap(nList[nCurrent], nList[nCurrent - 1]);
+			Swap(pList[nCurrent], pList[nCurrent - 1]);
 			nCurrent--;
 			bMoreToSearch = (nCurrent != nStartIndex);
 		}
@@ -71,32 +72,87 @@ void SortingAlgorithms::InsertItem(int* nList, int nStartIndex, int nEndIndex, i
 	}
 }
 
+//Auxiliary to MergeSort()
+void SortingAlgorithms::Merge(int* pList, int nLeftFirst, int nLeftLast, int nRightFirst, int nRightLast, int* pTempArray, int& nComparisons)
+{
+	int nIndex = nLeftFirst;
+	int nSaveFirst = nLeftFirst;
+
+	//Merging elements from left and right arrays in sorted order.
+	while ((nLeftFirst <= nLeftLast) && (nRightFirst <= nRightLast))
+	{
+		nComparisons++;
+		if (pList[nLeftFirst] < pList[nRightFirst])
+		{
+			pTempArray[nIndex] = pList[nLeftFirst];
+			nLeftFirst++;
+		} else {
+			pTempArray[nIndex] = pList[nRightFirst];
+			nRightFirst++;
+		}
+		nIndex++;
+	}
+
+	//Copy remaining elements from left array
+	while (nLeftFirst <= nLeftLast)
+	{
+		pTempArray[nIndex] = pList[nLeftFirst];
+		nLeftFirst++;
+		nIndex++;
+	}
+
+	//Copy remaining elements from right array
+	while (nRightFirst <= nRightLast)
+	{
+		pTempArray[nIndex] = pList[nRightFirst];
+		nRightFirst++;
+		nIndex++;
+	}
+
+	//Copy sorted elements back to original array
+	for (nIndex = nSaveFirst; nIndex <= nRightLast; nIndex++)
+	{
+		pList[nIndex] = pTempArray[nIndex];
+	}
+}
+
 /*Public*/
 SortingAlgorithms::SortingAlgorithms()
 {}
 
-void SortingAlgorithms::SelectionSort(int* nList, int nListLength, int& nComparisons)
+void SortingAlgorithms::SelectionSort(int* pList, int pListLength, int& nComparisons)
 {
-	int nEndIndex = nListLength - 1;
-	for (int i = 0; i < nListLength; i++)
-		Swap(nList[i], nList[MinIndex(nList, i, nEndIndex, nComparisons)]);
+	int nEndIndex = pListLength - 1;
+	for (int i = 0; i < pListLength; i++)
+		Swap(pList[i], pList[MinIndex(pList, i, nEndIndex, nComparisons)]);
 }
 
-void SortingAlgorithms::BubbleSort(int* nList, int nListLength, int& nComparisons)
+void SortingAlgorithms::BubbleSort(int* pList, int pListLength, int& nComparisons)
 {
-	for (int i = 0; i < nListLength; i++)
-		BubbleUp(nList, i, nListLength - 1, nComparisons);
+	for (int i = 0; i < pListLength; i++)
+		BubbleUp(pList, i, pListLength - 1, nComparisons);
 }
 
-void SortingAlgorithms::AdaptiveBubbleSort(int* nList, int nListLength, int& nComparisons)
+void SortingAlgorithms::AdaptiveBubbleSort(int* pList, int pListLength, int& nComparisons)
 {
 	bool bSorted = false;
-	for (int i = 0; i < nListLength && bSorted == false; i++)
-		AdaptiveBubbleUp(nList, i, nListLength - 1, bSorted, nComparisons);
+	for (int i = 0; i < pListLength && bSorted == false; i++)
+		AdaptiveBubbleUp(pList, i, pListLength - 1, bSorted, nComparisons);
 }
 
-void SortingAlgorithms::InsertionSort(int* nList, int nListLength, int& nComparisons)
+void SortingAlgorithms::InsertionSort(int* pList, int pListLength, int& nComparisons)
 {
-	for (int i = 0; i < nListLength; i++)
-		InsertItem(nList, 0, i, nComparisons);
+	for (int i = 0; i < pListLength; i++)
+		InsertItem(pList, 0, i, nComparisons);
+}
+
+void SortingAlgorithms::MergeSort(int* pList, int nFirst, int nLast, int* pTempArray, int& nComparisons)
+{
+	if (nFirst < nLast)
+	{
+		int nMiddle = (nFirst + nLast) / 2;
+		MergeSort(pList, nFirst, nMiddle, pTempArray, nComparisons);
+		MergeSort(pList, nMiddle + 1, nLast, pTempArray, nComparisons);
+		Merge(pList, nFirst, nMiddle, nMiddle + 1, nLast, pTempArray, nComparisons);
+	}
 }
